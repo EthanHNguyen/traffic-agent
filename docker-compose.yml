@@ -1,0 +1,20 @@
+services:
+  db:
+    image: postgis/postgis:16-3.4
+    environment:
+      POSTGRES_DB: traffic_agent
+      POSTGRES_USER: traffic_agent
+      POSTGRES_PASSWORD: traffic_agent
+    ports:
+      - "5432:5432"
+    volumes:
+      - traffic_agent_pgdata:/var/lib/postgresql/data
+      - ./infra/postgres/init.sql:/docker-entrypoint-initdb.d/001-init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U traffic_agent -d traffic_agent"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  traffic_agent_pgdata:

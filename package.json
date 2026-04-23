@@ -1,0 +1,22 @@
+{
+  "name": "nova-traffic-intelligence-agent",
+  "version": "0.1.0",
+  "private": true,
+  "workspaces": [
+    "apps/web"
+  ],
+  "scripts": {
+    "dev:web": "npm --workspace apps/web run dev",
+    "build:web": "npm --workspace apps/web run build",
+    "typecheck:web": "npm --workspace apps/web run typecheck",
+    "test:e2e": "playwright test",
+    "test:api": "cd apps/api && pytest",
+    "dev:api": "cd apps/api && .venv/bin/python -m uvicorn app.main:app --host 0.0.0.0 --port 8000",
+    "dev": "concurrently \"npm run dev:api\" \"npm run dev:web\""
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.59.1",
+    "concurrently": "^9.2.1",
+    "playwright": "^1.59.1"
+  }
+}

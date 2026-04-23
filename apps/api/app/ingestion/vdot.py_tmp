@@ -1,0 +1,51 @@
+def ingest_vdot_snapshot() -> IngestionRun:
+    \"\"\"Run one SmarterRoads ingestion attempt for all MVP feeds.\"\"\"
+    if not settings.has_vdot_credentials:
+        return _record_ingestion_run(
+            IngestionRun(
+                id=None,
+                source=SOURCE,
+                dataset_id=WZDX_DATASET_ID,
+                records_seen=0,
+                records_written=0,
+                status="missing_credentials",
+            )
+        )
+
+    try:
+        with SmarterRoadsClient() as client:
+            client.login()
+            _sync_dataset_metadata(client)
+            _resolve_all_dataset_assets(client)
+            
+            # Milestone 4: Ingest all MVP feeds
+            s1_seen, s1_written = _ingest_sensors(client)
+            s3_seen, s3_written = _ingest_incidents_or_events(client, 3)
+            s4_seen, s4_written = _ingest_incidents_or_events(client, 4)
+            s38_seen, s38_written = _ingest_wzdx(client)
+            
+            records_seen = s1_seen + s3_seen + s4_seen + s38_seen
+            records_written = s1_written + s3_written + s4_written + s38_written
+    except Exception as exc:
+        return _record_ingestion_run(
+            IngestionRun(
+                id=None,
+                source=SOURCE,
+                dataset_id=WZDX_DATASET_ID,
+                records_seen=0,
+                records_written=0,
+                status="failed",
+                error_message=str(exc),
+            )
+        )
+
+    return _record_ingestion_run(
+        IngestionRun(
+            id=None,
+            source=SOURCE,
+            dataset_id=WZDX_DATASET_ID,
+            records_seen=records_seen,
+            records_written=records_written,
+            status="success",
+        )
+    )

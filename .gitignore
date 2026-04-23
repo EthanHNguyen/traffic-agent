@@ -1,0 +1,31 @@
+# Build and Environment
+.env
+.env.local
+.venv/
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.next/
+node_modules/
+dist/
+build/
+coverage/
+*.pyc
+*.sqlite
+*.db
+*.tsbuildinfo
+.DS_Store
+
+# Images and Temporary Scripts
+*.png
+*.jpg
+*.jpeg
+reproduce_*.py
+reproduce_*.mjs
+verify_*.py
+verify_*.mjs
+test_*.py
+test_*.mjs
+inspect_*.py
+check_*.py
