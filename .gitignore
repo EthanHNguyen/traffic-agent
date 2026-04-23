@@ -19,6 +19,7 @@ coverage/
 
 # Images and Temporary Scripts
 *.png
+!docs/screenshot.png
 *.jpg
 *.jpeg
 reproduce_*.py
